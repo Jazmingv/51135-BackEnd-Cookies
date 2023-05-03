@@ -1,6 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
-import handlebars from 'express-handlebars';
+import handlebars from "express-handlebars";
+import session from "express-session";
+import MongoStore from "connect-mongo";
 
 import __dirname from './utils.js';
 import CartsRoute from "./routes/carts.route.js";
@@ -21,9 +23,24 @@ const MONGO_URL = "mongodb+srv://jazmingv:KJ8to7UL9ZcWUqf6@cluster0.fuizku2.mong
 APP.use(express.json());
 APP.use(express.urlencoded({ extends: true }));
 
+//public folder
+app.use(express.static(__dirname + '/public'));
+
 //routers
 APP.use("/api/products", ProductsRoute);
 APP.use("/api/carts", CartsRoute);
+
+
+app.use(session({
+    store: MongoStore.create({
+        mongoUrl: MONGO_URL,
+        mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
+        ttl: 40
+    }),
+    secret: "CoderS3cret",
+    resave: false,
+    saveUninitialized: true
+}))
 
 const connectMongoDB = async () => {
     try {

@@ -31,12 +31,6 @@ APP.use(express.urlencoded({ extends: true }));
 //Public folder
 APP.use(express.static(__dirname + '/public'));
 
-//Routers
-APP.use('/', usersViewRouter);
-APP.use("/api/products", ProductsRoute);
-APP.use("/api/carts", CartsRoute);
-APP.use("/api/users", UsersRoute);
-
 //Mongo Session
 APP.use(session({
     store: MongoStore.create({
@@ -48,6 +42,12 @@ APP.use(session({
     resave: false,
     saveUninitialized: true
 }))
+
+//Routers
+APP.use('/', usersViewRouter);
+APP.use("/api/products", ProductsRoute);
+APP.use("/api/carts", CartsRoute);
+APP.use("/api/users", UsersRoute);
 
 //Connect to MongoDB
 const connectMongoDB = async () => {

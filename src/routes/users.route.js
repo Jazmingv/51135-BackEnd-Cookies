@@ -13,10 +13,10 @@ UserRouter.get("/private", auth, Users.privateEndpoint);
 
 // Auth middleware
 function auth(req, res, next) {
-    if (req.session.user === 'pepe' && req.session.admin) {
+    if (req.session.user.email === 'admincoder@coder.com') {
         return next();
     } else {
-        return res.status(403).send('Usuario no autorizado, para ingresar al recurso')
+        return res.status(403).send('Not admin')
     }
 }
 

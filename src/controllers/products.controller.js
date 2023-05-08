@@ -4,7 +4,7 @@ import mongoosePaginate from "mongoose-paginate-v2";
 //GETALL
 export const getAllProducts = async (req, res) => {
     try {
-        let { limit = 10, page = 1, sort, _id, title, category } = req.query;
+        let { limit, page, sort, _id, title, category } = req.query;
 
         let filter = {};
         _id && (filter._id = _id);
@@ -12,17 +12,21 @@ export const getAllProducts = async (req, res) => {
         category && (filter.category = category);
 
         let options = {
-            limit: parseInt(limit),
-            page: parseInt(page),
+            limit: parseInt(limit) || 10,
+            page: parseInt(page) || 1,
             sort: sort && { price: sort === "asc" ? 1 : -1 },
         };
 
         let result = await Products.paginate(filter, options);
         const obj = result.docs.map(prod => prod);
+        const datos = obj.map(prod => {
+            const { _id, title, category, description, price, code, stock, thumbnail, status } = prod;
+            return { _id, title, category, description, price, code, stock, thumbnail, status };
+        });
 
         const responseObj = {
             status: "success",
-            payload: obj,
+            payload: datos,
             totalPages: result.totalPages,
             prevPage: result.prevPage,
             nextPage: result.nextPage,
@@ -31,8 +35,11 @@ export const getAllProducts = async (req, res) => {
             hasNextPage: result.hasNextPage,
             prevLink: result.hasPrevPage ? `/api/products?page=${result.prevPage}` : '',
             nextLink: result.hasNextPage ? `/api/products?page=${result.nextPage}` : '',
-            isValid: !(page <= 0 || page > result.totalPages)
+            user: req.session.user,
+            isValid: true
         }
+
+        console.log(responseObj.user);
         
         res.status(200).render("./indexProducts", responseObj);
     } catch (error) {

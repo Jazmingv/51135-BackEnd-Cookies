@@ -10,6 +10,7 @@ import __dirname from './utils.js';
 import CartsRoute from "./routes/carts.route.js";
 import ProductsRoute from "./routes/products.route.js";
 import UsersRoute from "./routes/users.route.js";
+import usersViewRouter from "./routes/userViews.route.js";
 
 //Initializing app w/express
 const APP = express();
@@ -28,21 +29,22 @@ APP.use(express.json());
 APP.use(express.urlencoded({ extends: true }));
 
 //Public folder
-app.use(express.static(__dirname + '/public'));
+APP.use(express.static(__dirname + '/public'));
 
 //Routers
+APP.use('/', usersViewRouter);
 APP.use("/api/products", ProductsRoute);
 APP.use("/api/carts", CartsRoute);
 APP.use("/api/users", UsersRoute);
 
 //Mongo Session
-app.use(session({
+APP.use(session({
     store: MongoStore.create({
         mongoUrl: MONGO_URL,
         mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
-        ttl: 40
+        ttl: 60
     }),
-    secret: "CoderS3cret",
+    secret: "JazminGV",
     resave: false,
     saveUninitialized: true
 }))

@@ -1,7 +1,12 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\src",
+    "\\src\\controllers",
+    "\\src\\models",
+    "\\src\\public\\js",
+    "\\src\\routes"
   ],
-  "SelectedNode": "\\package.json",
+  "SelectedNode": "\\src\\controllers\\users.controller.js",
   "PreviewInSolutionExplorer": false
 }
